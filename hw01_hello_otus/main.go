@@ -3,11 +3,11 @@ package main
 import (
 	"fmt"
 
-	sutil "golang.org/x/example/stringutil"
+	"golang.org/x/example/stringutil"
 )
 
 func main() {
-	input := "Hello, OTUS!"
-	input = sutil.Reverse(input)
-	fmt.Println(input)
+	stringToReverse := "Hello, OTUS!"
+	outputString := stringutil.Reverse(stringToReverse)
+	fmt.Println(outputString)
 }
