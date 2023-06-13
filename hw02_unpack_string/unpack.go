@@ -26,39 +26,42 @@ func formString(input string) (output string) {
 	var rep []int
 	for i, character := range input {
 		repeats, err := strconv.Atoi(string(character))
-		if err != nil {
-			if character == '\\' {
-				if isPrevSlash {
-					prevRune = character
-					isPrevRune = true
-					isPrevSlash = false
-				} else {
-					isPrevSlash = true
-					runes = append(runes, prevRune)
-					rep = append(rep, 1)
-				}
-			} else if isPrevInt {
+		switch {
+		case err != nil:
+			switch {
+			case character == '\\' && isPrevSlash:
+				prevRune = character
+				isPrevRune = true
+				isPrevSlash = false
+			case character == '\\' && !isPrevSlash:
+				isPrevSlash = true
+				runes = append(runes, prevRune)
+				rep = append(rep, 1)
+			case isPrevInt:
 				prevRune = character
 				isPrevRune = true
 				isPrevInt = false
 				fmt.Println("isPrevInt " + string(prevRune))
-			} else if isPrevRune {
+			case isPrevRune:
 				runes = append(runes, prevRune)
 				rep = append(rep, 1)
 				isPrevRune = true
 				fmt.Println("isPrevRune" + string(prevRune))
 				prevRune = character
 			}
-		} else if isPrevSlash && err == nil {
-			isPrevSlash = false
-			isPrevRune = true
-			prevRune = character
-			fmt.Println("isPrevSlash " + string(prevRune) + " " + strconv.Itoa(repeats))
-		} else {
-			runes = append(runes, prevRune)
-			rep = append(rep, repeats)
-			println("Default " + string(prevRune) + string(character))
-			isPrevInt = true
+		case err == nil:
+			switch {
+			case isPrevSlash:
+				isPrevSlash = false
+				isPrevRune = true
+				prevRune = character
+				fmt.Println("isPrevSlash " + string(prevRune) + " " + strconv.Itoa(repeats))
+			default:
+				runes = append(runes, prevRune)
+				rep = append(rep, repeats)
+				println("Default " + string(prevRune) + string(character))
+				isPrevInt = true
+			}
 		}
 		if len(input)-1 == i && !isPrevInt {
 			runes = append(runes, prevRune)
@@ -79,23 +82,26 @@ func isValidString(input string) (valid bool) {
 	prevIsSlash := false
 	for _, character := range input {
 		_, err := strconv.Atoi(string(character))
-		if err != nil {
+		switch {
+		case err != nil:
 			prevIsInt = false
-			if character != '\\' && prevIsSlash {
+			switch {
+			case character != '\\' && prevIsSlash:
 				return false
-			}
-			if character == '\\' {
-				prevIsSlash = true
-			} else if character == '\\' && prevIsSlash {
+			case character == '\\' && prevIsSlash:
 				prevIsSlash = false
+			case character == '\\':
+				prevIsSlash = true
 			}
-		} else if prevIsInt && prevIsSlash {
-			prevIsSlash = false
-		} else if prevIsInt {
-			return false
-			break
-		} else {
-			prevIsInt = true
+		case err == nil:
+			switch {
+			case prevIsInt && prevIsSlash:
+				prevIsSlash = false
+			case prevIsInt:
+				return false
+			default:
+				prevIsInt = true
+			}
 		}
 	}
 	return true
