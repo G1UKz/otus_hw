@@ -59,13 +59,11 @@ func formString(input string) (output string) {
 			rep = append(rep, repeats)
 			println("Default " + string(prevRune) + string(character))
 			isPrevInt = true
-
 		}
 		if len(input)-1 == i && !isPrevInt {
 			runes = append(runes, prevRune)
 			rep = append(rep, 1)
 		}
-
 	}
 	fmt.Println(len(runes))
 	println(len(rep))
