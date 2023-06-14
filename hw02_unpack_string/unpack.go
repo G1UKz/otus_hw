@@ -2,7 +2,6 @@ package hw02unpackstring
 
 import (
 	"errors"
-	"fmt"
 	"strconv"
 	"strings"
 )
@@ -19,60 +18,34 @@ func Unpack(input string) (string, error) {
 
 func formString(input string) (output string) {
 	var builder strings.Builder
-	var prevRune rune
-	var isPrevRune, isPrevSlash bool
-	isPrevInt := true
 	var runes []rune
 	var rep []int
-	for i, character := range input {
+	var isPrevSlash bool
+	for _, character := range input {
 		repeats, err := strconv.Atoi(string(character))
 		switch {
 		case err != nil:
 			switch {
-			case character == '\\' && isPrevSlash:
-				prevRune = character
-				isPrevRune = true
-				isPrevSlash = false
 			case character == '\\' && !isPrevSlash:
 				isPrevSlash = true
-				runes = append(runes, prevRune)
+			default:
+				runes = append(runes, character)
 				rep = append(rep, 1)
-			case isPrevInt:
-				prevRune = character
-				isPrevRune = true
-				isPrevInt = false
-				fmt.Println("isPrevInt " + string(prevRune))
-			case isPrevRune:
-				runes = append(runes, prevRune)
-				rep = append(rep, 1)
-				isPrevRune = true
-				fmt.Println("isPrevRune" + string(prevRune))
-				prevRune = character
+				isPrevSlash = false
 			}
 		case err == nil:
 			switch {
 			case isPrevSlash:
+				runes = append(runes, character)
+				rep = append(rep, 1)
 				isPrevSlash = false
-				isPrevRune = true
-				prevRune = character
-				fmt.Println("isPrevSlash " + string(prevRune) + " " + strconv.Itoa(repeats))
 			default:
-				runes = append(runes, prevRune)
-				rep = append(rep, repeats)
-				println("Default " + string(prevRune) + string(character))
-				isPrevInt = true
+				rep[len(rep)-1] = repeats
 			}
 		}
-		if len(input)-1 == i && !isPrevInt {
-			runes = append(runes, prevRune)
-			rep = append(rep, 1)
-		}
 	}
-	fmt.Println(len(runes))
-	println(len(rep))
-	for i := 0; i < len(runes); i++ {
-		builder.WriteString(strings.Repeat(string(runes[i]), rep[i]))
-		fmt.Printf("Building string, i: %s,key: %s , value: %s \n", strconv.Itoa(i), string(runes[i]), strconv.Itoa(rep[i]))
+	for z := 0; z < len(runes); z++ {
+		builder.WriteString(strings.Repeat(string(runes[z]), rep[z]))
 	}
 	return builder.String()
 }
@@ -95,7 +68,7 @@ func isValidString(input string) (valid bool) {
 			}
 		case err == nil:
 			switch {
-			case prevIsInt && prevIsSlash:
+			case prevIsSlash:
 				prevIsSlash = false
 			case prevIsInt:
 				return false
