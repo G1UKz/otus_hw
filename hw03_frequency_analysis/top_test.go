@@ -7,7 +7,7 @@ import (
 )
 
 // Change to true if needed.
-var taskWithAsteriskIsCompleted = false
+var taskWithAsteriskIsCompleted = true
 
 var text = `Как видите, он  спускается  по  лестнице  вслед  за  своим
 	другом   Кристофером   Робином,   головой   вниз,  пересчитывая
@@ -42,6 +42,21 @@ var text = `Как видите, он  спускается  по  лестни�
 	иногда,  особенно  когда  папа  дома,  он больше любит тихонько
 	посидеть у огня и послушать какую-нибудь интересную сказку.
 		В этот вечер...`
+
+var textLatin = `They say that good books cannot become old. I can
+say the same about the books of a unique English writer of the 19th
+century, Charlotte Bronte. She is one of the best representatives of
+the English realism trend. My favourite book by Charlotte Bronte is
+the novel that brought her fame, «Jane Eyre». «Jane Eyre» is an 
+autobiographical novel. The main character is a shy girl, who has,
+however, a strong will and is independent. From her childhood Jane 
+learned that she could rely only on herself. She came from a poor 
+family, studied at Lowood institution for poor children, where she
+had to face many difficulties. But she learned to overcome her fears 
+and troubles. She was also able to sympathize with other people and
+give a helping hand in a difficult situation.
+	`
+var shortText = "Short text for test"
 
 func TestTop10(t *testing.T) {
 	t.Run("no words in empty string", func(t *testing.T) {
@@ -78,5 +93,31 @@ func TestTop10(t *testing.T) {
 			}
 			require.Equal(t, expected, Top10(text))
 		}
+	})
+
+	t.Run("positive latin test", func(t *testing.T) {
+		expected := []string{
+			"the",  // 8
+			"a",    // 6
+			"she",  // 6
+			"is",   // 5
+			"of",   // 5
+			"and",  // 4
+			"her",  // 4
+			"jane", // 4
+			"that", // 4
+			"to",   // 4
+		}
+		require.Equal(t, expected, Top10(textLatin))
+	})
+
+	t.Run("short text test", func(t *testing.T) {
+		expected := []string{
+			"for",
+			"short",
+			"test",
+			"text",
+		}
+		require.Equal(t, expected, Top10(shortText))
 	})
 }
