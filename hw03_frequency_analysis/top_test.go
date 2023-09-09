@@ -56,6 +56,7 @@ had to face many difficulties. But she learned to overcome her fears
 and troubles. She was also able to sympathize with other people and
 give a helping hand in a difficult situation.
 	`
+var shortText = "Short text for test"
 
 func TestTop10(t *testing.T) {
 	t.Run("no words in empty string", func(t *testing.T) {
@@ -108,5 +109,12 @@ func TestTop10(t *testing.T) {
 			"to",   // 4
 		}
 		require.Equal(t, expected, Top10(textLatin))
+	})
+
+	t.Run("short text test", func(t *testing.T) {
+		expected := []string{
+			"Error, less than 10 words in input text", // 8
+		}
+		require.Equal(t, expected, Top10(shortText))
 	})
 }

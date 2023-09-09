@@ -10,7 +10,8 @@ func Top10(inputString string) []string {
 	if inputString == "" {
 		return []string{}
 	}
-	splitedString := strings.Split(inputString, " ")
+	filteredString := regexp.MustCompile(`[^а-яА-Яa-zA-Z\-]`).ReplaceAllString(inputString, " ")
+	splitedString := strings.Split(filteredString, " ")
 	filteredSlice := FilterString(splitedString)
 	outputMap := countStrings(filteredSlice)
 	output := formTop10(outputMap)
@@ -19,6 +20,9 @@ func Top10(inputString string) []string {
 			output = append(output[:i], output[i+1:]...)
 		}
 	}
+	if len(output) < 11 {
+		return []string{"Error, less than 10 words in input text"}
+	}
 	return output[0:10]
 }
 
@@ -26,8 +30,7 @@ func FilterString(inputSlice []string) []string {
 	var outputSlice []string
 	for _, word := range inputSlice {
 		if word != "" {
-			filteredWord := regexp.MustCompile(`[^а-яА-Яa-zA-Z\-]`).ReplaceAllString(word, " ")
-			splitedWord := strings.Split(filteredWord, " ")
+			splitedWord := strings.Split(word, " ")
 			for _, word := range splitedWord {
 				if word != "" {
 					outputSlice = append(outputSlice, word)
@@ -41,14 +44,7 @@ func FilterString(inputSlice []string) []string {
 func countStrings(inputSlice []string) map[string]int {
 	countedWords := make(map[string]int)
 	for _, word := range inputSlice {
-		var exist bool
-		count, exist := countedWords[strings.ToLower(word)]
-		if exist {
-			countedWords[strings.ToLower(word)] = count + 1
-			exist = false
-		} else {
-			countedWords[strings.ToLower(word)] = 1
-		}
+		countedWords[strings.ToLower(word)]++
 	}
 
 	return countedWords
