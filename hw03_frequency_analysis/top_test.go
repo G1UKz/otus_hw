@@ -113,7 +113,10 @@ func TestTop10(t *testing.T) {
 
 	t.Run("short text test", func(t *testing.T) {
 		expected := []string{
-			"Error, less than 10 words in input text", // 8
+			"for",
+			"short",
+			"test",
+			"text",
 		}
 		require.Equal(t, expected, Top10(shortText))
 	})

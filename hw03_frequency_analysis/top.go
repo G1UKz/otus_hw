@@ -15,13 +15,13 @@ func Top10(inputString string) []string {
 	filteredSlice := FilterString(splitedString)
 	outputMap := countStrings(filteredSlice)
 	output := sortTop10(outputMap)
-	if len(output) < 11 {
-		return []string{"Error, less than 10 words in input text"}
-	}
-	for i := 0; i < 11; i++ {
+	for i := 0; i < len(output); i++ {
 		if output[i] == "-" {
 			output = append(output[:i], output[i+1:]...)
 		}
+	}
+	if len(output) < 11 {
+		return output
 	}
 	return output[0:10]
 }
