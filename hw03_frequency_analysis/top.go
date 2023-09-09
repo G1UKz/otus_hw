@@ -26,7 +26,7 @@ func FilterString(inputSlice []string) []string {
 	var outputSlice []string
 	for _, word := range inputSlice {
 		if word != "" {
-			filteredWord := regexp.MustCompile(`[^а-яА-Я\-]`).ReplaceAllString(word, " ")
+			filteredWord := regexp.MustCompile(`[^а-яА-Яa-zA-Z\-]`).ReplaceAllString(word, " ")
 			splitedWord := strings.Split(filteredWord, " ")
 			for _, word := range splitedWord {
 				if word != "" {
